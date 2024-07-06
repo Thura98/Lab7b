@@ -15,7 +15,7 @@ pipeline {
                         sh 'echo "Kill script finished"'
                     }
                 }
-                stage('Build and Test') {
+                stage('Headless Browser Test') {
                     agent {
                         docker {
                             image 'maven:3.8.1-jdk-8'
