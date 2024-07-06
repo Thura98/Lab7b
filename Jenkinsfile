@@ -18,14 +18,17 @@ pipeline {
                 stage('Headless Browser Test') {
                     agent {
                         docker {
-                            image 'maven:3-alpine'
-                            args '-v /root/.m2:/root/.m2'
+                            image 'selenium/standalone-chrome'
                         }
                     }
                     steps {
+                        // Ensure source code is checked out
+                        checkout scm
+                        // Run Maven clean package
                         sh 'echo "Starting Maven clean package"'
                         sh 'mvn -B -DskipTests clean package'
                         sh 'echo "Finished Maven clean package"'
+                        // Run Maven tests
                         sh 'echo "Starting Maven tests"'
                         sh 'mvn test'
                         sh 'echo "Finished Maven tests"'
