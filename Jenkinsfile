@@ -18,7 +18,8 @@ pipeline {
                 stage('Headless Browser Test') {
                     agent {
                         docker {
-                            image 'maven:3.8.1-jdk-8'
+                            image 'maven:3-alpine'
+							args '-v /root/.m2:/root/.m2'
                         }
                     }
                     steps {
@@ -32,29 +33,6 @@ pipeline {
                         sh 'echo "Starting Maven tests"'
                         sh 'mvn test'
                         sh 'echo "Finished Maven tests"'
-                    }
-                    post {
-                        always {
-                            junit 'target/surefire-reports/*.xml'
-                        }
-                        failure {
-                            echo 'Build and Test stage failed'
-                        }
-                    }
-                }
-                stage('Headless Browser Test') {
-                    agent {
-                        docker {
-                            image 'selenium/standalone-chrome'
-                        }
-                    }
-                    steps {
-                        // Ensure source code is checked out
-                        checkout scm
-                        // Run headless browser tests
-                        sh 'echo "Starting headless browser tests"'
-                        sh 'mvn verify -Dtest=HeadlessBrowserTests'
-                        sh 'echo "Finished headless browser tests"'
                     }
                     post {
                         always {
